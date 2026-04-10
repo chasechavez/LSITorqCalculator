@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSI & Torque Calculator - Chase Chavez</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#005F87">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LSI Calculator">
+    <meta name="description" content="LSI & Torque Calculator by Chase Chavez, PT, DPT, SCS">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'><path d='M 110 50 L 180 170 L 40 170 Z' stroke='%23005F87' stroke-width='14' fill='none' stroke-linejoin='miter'/><line x1='110' y1='50' x2='110' y2='170' stroke='%23005F87' stroke-width='10'/><line x1='40' y1='170' x2='145' y2='110' stroke='%23005F87' stroke-width='10'/><line x1='180' y1='170' x2='75' y2='110' stroke='%23005F87' stroke-width='10'/><circle cx='110' cy='125' r='14' fill='%23005F87'/></svg>">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'><rect width='220' height='220' fill='white'/><path d='M 110 50 L 180 170 L 40 170 Z' stroke='%23005F87' stroke-width='14' fill='none' stroke-linejoin='miter'/><line x1='110' y1='50' x2='110' y2='170' stroke='%23005F87' stroke-width='10'/><line x1='40' y1='170' x2='145' y2='110' stroke='%23005F87' stroke-width='10'/><line x1='180' y1='170' x2='75' y2='110' stroke='%23005F87' stroke-width='10'/><circle cx='110' cy='125' r='14' fill='%23005F87'/></svg>">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;LSI Calculator&quot;,&quot;short_name&quot;:&quot;LSI Calc&quot;,&quot;description&quot;:&quot;LSI and Torque Calculator by Chase Chavez&quot;,&quot;theme_color&quot;:&quot;%23005F87&quot;,&quot;background_color&quot;:&quot;%23ffffff&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'><rect width='220' height='220' fill='white'/><path d='M 110 50 L 180 170 L 40 170 Z' stroke='%23005F87' stroke-width='14' fill='none' stroke-linejoin='miter'/><line x1='110' y1='50' x2='110' y2='170' stroke='%23005F87' stroke-width='10'/><line x1='40' y1='170' x2='145' y2='110' stroke='%23005F87' stroke-width='10'/><line x1='180' y1='170' x2='75' y2='110' stroke='%23005F87' stroke-width='10'/><circle cx='110' cy='125' r='14' fill='%23005F87'/></svg>&quot;,&quot;sizes&quot;:&quot;512x512&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #003d5c 0%, #001f2e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #f8f9fa;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            border: 1px solid rgba(0, 95, 135, 0.1);
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #00A3A3;
+        }
+
+        .brand-logo {
+            display: block;
+            margin: 0 auto 15px auto;
+        }
+
+        .brand-name {
+            color: #005F87;
+            font-size: 1.8em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .brand-credentials {
+            color: #565A5C;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e6eb;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: 600;
+            color: #565A5C;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #005F87;
+        }
+
+        .tab-btn.active {
+            color: #005F87;
+            border-bottom-color: #00A3A3;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .normative-content {
+            padding: 20px 0;
+        }
+
+        .normative-table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .normative-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 0.9em;
+        }
+
+        .normative-table thead {
+            background: linear-gradient(135deg, #005F87 0%, #003d5c 100%);
+            color: white;
+        }
+
+        .normative-table th {
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 3px solid #00A3A3;
+        }
+
+        .normative-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e6eb;
+            color: #333;
+            text-align: center;
+        }
+
+        .normative-table tbody tr:hover {
+            background: rgba(0, 95, 135, 0.05);
+        }
+
+        .normative-table tbody tr.section-header {
+            background: rgba(0, 163, 163, 0.1);
+            font-weight: bold;
+            color: #005F87;
+        }
+
+        .normative-table tbody tr.section-header:hover {
+            background: rgba(0, 163, 163, 0.15);
+        }
+
+        .normative-reference {
+            background: white;
+            border: 2px solid #00A3A3;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 25px;
+        }
+
+        .normative-reference h3 {
+            color: #005F87;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .comparison-card {
+            background: rgba(0, 163, 163, 0.05);
+            border: 2px solid #e0e6eb;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .comparison-card h4 {
+            color: #005F87;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .comparison-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e6eb;
+        }
+
+        .comparison-label {
+            color: #565A5C;
+            font-size: 0.9em;
+        }
+
+        .comparison-value {
+            color: #005F87;
+            font-weight: bold;
+        }
+
+        .performance-indicator {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .indicator-bar {
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: white;
+            font-size: 1em;
+        }
+
+        .indicator-bar.green {
+            background: #28a745;
+        }
+
+        .indicator-bar.yellow {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .indicator-bar.red {
+            background: #dc3545;
+        }
+
+        .indicator-text {
+            font-size: 0.85em;
+            color: #565A5C;
+            font-weight: 500;
+        }
+
+        .movement-details {
+            background: rgba(0, 95, 135, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-label {
+            color: #565A5C;
+            font-size: 0.85em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #005F87;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .performance-legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            color: #565A5C;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .movement-details {
+                grid-template-columns: 1fr;
+            }
+
+            .performance-legend {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+
+        h1 {
+            color: #005F87;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #565A5C;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .input-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 2px solid #e0e6eb;
+        }
+
+        .section-title {
+            color: #005F87;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: bold;
+            border-bottom: 2px solid #005F87;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: #565A5C;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 2px solid #d0d5da;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+            background: white;
+            color: #333;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #005F87;
+            box-shadow: 0 0 0 3px rgba(0, 95, 135, 0.15);
+        }
+
+        .calculate-btn {
+            background: #005F87;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            margin-top: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 95, 135, 0.4);
+            background: #004a6b;
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #005F87 0%, #003d5c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 40px rgba(0, 95, 135, 0.3);
+            border: 2px solid rgba(0, 163, 163, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00A3A3, #005F87, #00A3A3);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .result-title {
+            font-size: 0.95em;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .result-interpretation {
+            font-size: 0.95em;
+            opacity: 0.95;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .torque-results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .torque-card {
+            background: linear-gradient(135deg, #005F87 0%, #003d5c 100%);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0, 95, 135, 0.25);
+            border: 2px solid rgba(0, 163, 163, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .torque-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00A3A3, #005F87, #00A3A3);
+            animation: shimmer 3s infinite;
+        }
+
+        .torque-card h3 {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+        .torque-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+        }
+
+        .torque-item:hover {
+            background: none;
+        }
+
+        .torque-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+
+        .torque-value {
+            color: white;
+            font-weight: 700;
+            font-size: 2.5em;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .force-conversions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+        }
+
+        .conversion-item {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .torque-results {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 25px;
+            }
+        }
+
+        .info-text {
+            background: rgba(0, 163, 163, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #00A3A3;
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #565A5C;
+        }
+
+        .info-text strong {
+            color: #005F87;
+        }
+
+        /* ── Unit Converter Tab ── */
+        .converter-content {
+            padding: 20px 0;
+        }
+
+        .converter-card {
+            background: white;
+            border: 2px solid #e0e6eb;
+            border-radius: 15px;
+            padding: 35px 30px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .converter-card h2 {
+            color: #005F87;
+            font-size: 1.25em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .converter-card p {
+            color: #565A5C;
+            font-size: 0.85em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .converter-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .converter-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .converter-field label {
+            font-size: 0.8em;
+            font-weight: 700;
+            color: #565A5C;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .converter-input-wrap {
+            display: flex;
+            align-items: center;
+            border: 2px solid #d0d5da;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.25s, box-shadow 0.25s;
+            background: white;
+        }
+
+        .converter-input-wrap:focus-within {
+            border-color: #005F87;
+            box-shadow: 0 0 0 3px rgba(0, 95, 135, 0.15);
+        }
+
+        .converter-input-wrap.active-source {
+            border-color: #00A3A3;
+            box-shadow: 0 0 0 3px rgba(0, 163, 163, 0.15);
+        }
+
+        .converter-input-wrap input {
+            flex: 1;
+            border: none;
+            border-radius: 0;
+            padding: 14px 16px;
+            font-size: 1.15em;
+            font-weight: 600;
+            color: #222;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .converter-input-wrap input:focus {
+            outline: none;
+            border: none;
+            box-shadow: none;
+        }
+
+        .converter-unit-badge {
+            padding: 0 18px;
+            font-size: 0.9em;
+            font-weight: 700;
+            color: white;
+            background: #005F87;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            min-width: 68px;
+            justify-content: center;
+            letter-spacing: 0.5px;
+        }
+
+        .converter-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 4px 0;
+            color: #c0c7cc;
+            font-size: 0.75em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .converter-divider::before,
+        .converter-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e0e6eb;
+        }
+
+        .converter-clear-btn {
+            margin-top: 24px;
+            width: 100%;
+            padding: 13px;
+            border: 2px solid #e0e6eb;
+            border-radius: 10px;
+            background: white;
+            color: #565A5C;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            transition: all 0.2s;
+        }
+
+        .converter-clear-btn:hover {
+            border-color: #005F87;
+            color: #005F87;
+            background: rgba(0, 95, 135, 0.04);
+        }
+
+        .converter-note {
+            margin-top: 22px;
+            background: rgba(0, 163, 163, 0.08);
+            border-left: 4px solid #00A3A3;
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-size: 0.82em;
+            color: #565A5C;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .converter-note strong {
+            color: #005F87;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand-header">
+            <svg width="80" height="80" viewBox="0 0 220 220" class="brand-logo">
+                <path d="M 110 50 L 180 170 L 40 170 Z" 
+                      stroke="#005F87" stroke-width="14" fill="none" stroke-linejoin="miter"/>
+                <line x1="110" y1="50" x2="110" y2="170" stroke="#005F87" stroke-width="10"/>
+                <line x1="40" y1="170" x2="145" y2="110" stroke="#005F87" stroke-width="10"/>
+                <line x1="180" y1="170" x2="75" y2="110" stroke="#005F87" stroke-width="10"/>
+                <circle cx="110" cy="125" r="14" fill="#005F87"/>
+            </svg>
+            <div class="brand-name">CHASE CHAVEZ</div>
+            <div class="brand-credentials">PT, DPT, SCS | Data-Driven Rehabilitation • Interdisciplinary Leadership • Systems Innovation</div>
+        </div>
+        <h1>LSI & Torque Calculator</h1>
+        <p class="subtitle">Limb Symmetry Index and Peak Torque-to-Bodyweight Analysis</p>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('calculator')">Calculator</button>
+            <button class="tab-btn" onclick="showTab('normative')">Normative Values</button>
+            <button class="tab-btn" onclick="showTab('converter')">Unit Converter</button>
+        </div>
+
+        <!-- ── Calculator Tab ── -->
+        <div id="calculator-tab" class="tab-content active">
+
+        <div class="input-section">
+            <h2 class="section-title">Movement Selection</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="jointSelect">Select Joint/Movement</label>
+                    <select id="jointSelect">
+                        <option value="">-- Select Movement --</option>
+                        <optgroup label="HIP">
+                            <option value="Hip ADD">Hip ADD</option>
+                            <option value="Hip ABD">Hip ABD</option>
+                            <option value="Hip Flexion">Hip Flexion</option>
+                            <option value="Hip Extension">Hip Extension</option>
+                            <option value="Hip ER">Hip ER</option>
+                            <option value="Hip IR">Hip IR</option>
+                        </optgroup>
+                        <optgroup label="KNEE">
+                            <option value="Knee Extension">Knee Extension</option>
+                            <option value="Knee Flexion">Knee Flexion</option>
+                        </optgroup>
+                        <optgroup label="ANKLE">
+                            <option value="Ankle PF">Ankle PF</option>
+                            <option value="Ankle DF">Ankle DF</option>
+                            <option value="Ankle Eversion">Ankle Eversion</option>
+                            <option value="Ankle Inversion">Ankle Inversion</option>
+                        </optgroup>
+                        <optgroup label="FOOT">
+                            <option value="Extrinsic">Extrinsic</option>
+                            <option value="Intrinsic">Intrinsic</option>
+                        </optgroup>
+                        <optgroup label="SHOULDER">
+                            <option value="Shoulder ER">Shoulder ER</option>
+                            <option value="Shoulder IR">Shoulder IR</option>
+                            <option value="Shoulder Elevation">Shoulder Elevation</option>
+                            <option value="ASH I">ASH I</option>
+                            <option value="ASH Y">ASH Y</option>
+                            <option value="ASH T">ASH T</option>
+                        </optgroup>
+                        <optgroup label="ELBOW">
+                            <option value="Elbow Flexion">Elbow Flexion</option>
+                            <option value="Elbow Extension">Elbow Extension</option>
+                        </optgroup>
+                        <optgroup label="WRIST">
+                            <option value="Wrist Flexion">Wrist Flexion</option>
+                            <option value="Wrist Extension">Wrist Extension</option>
+                        </optgroup>
+                        <optgroup label="CERVICAL">
+                            <option value="Flexion">Cervical Flexion</option>
+                            <option value="Extension">Cervical Extension</option>
+                            <option value="Side Bend">Cervical Side Bend</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <h2 class="section-title">Peak Force Measurements</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="leftForce">Left Side Peak Force</label>
+                    <input type="number" id="leftForce" step="0.01" placeholder="Enter value">
+                </div>
+                <div class="input-field">
+                    <label for="rightForce">Right Side Peak Force</label>
+                    <input type="number" id="rightForce" step="0.01" placeholder="Enter value">
+                </div>
+                <div class="input-field">
+                    <label for="forceUnit">Force Unit</label>
+                    <select id="forceUnit">
+                        <option value="N">Newtons (N)</option>
+                        <option value="lb">Pounds (lb)</option>
+                        <option value="kg">Kilograms (kg)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <h2 class="section-title">Moment Arm & Bodyweight</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="momentArm">Moment Arm Length</label>
+                    <input type="number" id="momentArm" step="0.001" placeholder="Enter value">
+                </div>
+                <div class="input-field">
+                    <label for="momentUnit">Moment Arm Unit</label>
+                    <select id="momentUnit">
+                        <option value="cm">Centimeters (cm)</option>
+                        <option value="m">Meters (m)</option>
+                        <option value="ft">Feet (ft)</option>
+                        <option value="in">Inches (in)</option>
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="bodyweight">Bodyweight</label>
+                    <input type="number" id="bodyweight" step="0.01" placeholder="Enter value">
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="bwUnit">Bodyweight Unit</label>
+                    <select id="bwUnit">
+                        <option value="lb">Pounds (lb)</option>
+                        <option value="kg">Kilograms (kg)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="info-text">
+                <strong>Note:</strong> Moment arm is the perpendicular distance from the axis of rotation to the line of force application (e.g., from knee joint to force sensor pad).
+            </div>
+        </div>
+
+        <button class="calculate-btn" onclick="calculate()">Calculate Results</button>
+
+        <div class="results-section" id="results">
+            <div class="result-card">
+                <div class="result-title">Limb Symmetry Index (LSI)</div>
+                <div class="result-value" id="lsiValue">--</div>
+                <div class="result-interpretation" id="lsiInterpretation"></div>
+            </div>
+
+            <div class="torque-results">
+                <div class="torque-card">
+                    <h3>Left Side</h3>
+                    <div class="torque-item">
+                        <span class="torque-label">Peak Force</span>
+                        <span class="torque-value" id="leftForceDisplay">--</span>
+                    </div>
+                    <div class="force-conversions" id="leftForceConversions">
+                        <span class="conversion-item" id="leftForceN">-- N</span>
+                        <span class="conversion-item" id="leftForceLb">-- lb</span>
+                        <span class="conversion-item" id="leftForceKg">-- kg</span>
+                    </div>
+                    <div class="torque-item" style="margin-top: 20px;">
+                        <span class="torque-label">Torque/BW Ratio</span>
+                        <span class="torque-value" id="leftRatioNm">-- Nm/kg</span>
+                    </div>
+                </div>
+
+                <div class="torque-card">
+                    <h3>Right Side</h3>
+                    <div class="torque-item">
+                        <span class="torque-label">Peak Force</span>
+                        <span class="torque-value" id="rightForceDisplay">--</span>
+                    </div>
+                    <div class="force-conversions" id="rightForceConversions">
+                        <span class="conversion-item" id="rightForceN">-- N</span>
+                        <span class="conversion-item" id="rightForceLb">-- lb</span>
+                        <span class="conversion-item" id="rightForceKg">-- kg</span>
+                    </div>
+                    <div class="torque-item" style="margin-top: 20px;">
+                        <span class="torque-label">Torque/BW Ratio</span>
+                        <span class="torque-value" id="rightRatioNm">-- Nm/kg</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Normative Reference Box -->
+            <div id="normativeReference" class="normative-reference" style="display: none;">
+                <h3>Performance Analysis: Actual vs. Normative Values</h3>
+                
+                <div class="comparison-grid">
+                    <!-- Left Side Comparison -->
+                    <div class="comparison-card">
+                        <h4>Left Side</h4>
+                        <div class="comparison-row">
+                            <div class="comparison-label">Your Torque/BW Ratio:</div>
+                            <div class="comparison-value" id="leftActualRatio">-- Nm/kg</div>
+                        </div>
+                        <div class="comparison-row">
+                            <div class="comparison-label">Expected Range:</div>
+                            <div class="comparison-value" id="leftExpectedRange">--</div>
+                        </div>
+                        <div class="performance-indicator" id="leftIndicator">
+                            <div class="indicator-bar" id="leftIndicatorBar"></div>
+                            <div class="indicator-text" id="leftIndicatorText">--</div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side Comparison -->
+                    <div class="comparison-card">
+                        <h4>Right Side</h4>
+                        <div class="comparison-row">
+                            <div class="comparison-label">Your Torque/BW Ratio:</div>
+                            <div class="comparison-value" id="rightActualRatio">-- Nm/kg</div>
+                        </div>
+                        <div class="comparison-row">
+                            <div class="comparison-label">Expected Range:</div>
+                            <div class="comparison-value" id="rightExpectedRange">--</div>
+                        </div>
+                        <div class="performance-indicator" id="rightIndicator">
+                            <div class="indicator-bar" id="rightIndicatorBar"></div>
+                            <div class="indicator-text" id="rightIndicatorText">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div> <!-- End calculator-tab -->
+
+        <!-- ── Normative Values Tab ── -->
+        <div id="normative-tab" class="tab-content">
+            <div class="normative-content">
+                <h2 style="color: #005F87; margin-bottom: 20px; text-align: center;">Dynamometry Normative Values</h2>
+                <p style="text-align: center; color: #565A5C; margin-bottom: 30px;">Reference values for force production across different movements and joint positions</p>
+                
+                <div class="normative-table-container">
+                    <table class="normative-table">
+                        <thead>
+                            <tr>
+                                <th>Movement</th>
+                                <th>Landmark</th>
+                                <th>Position</th>
+                                <th>Force Potential (Nm/kg)</th>
+                                <th>Force Potential (% BW)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="normativeTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Unit Converter Tab ── -->
+        <div id="converter-tab" class="tab-content">
+            <div class="converter-content">
+                <div class="converter-card">
+                    <h2>Force Unit Converter</h2>
+                    <p>Type any value — the other two units update instantly.</p>
+
+                    <div class="converter-fields">
+
+                        <!-- Newtons -->
+                        <div class="converter-field">
+                            <label>Newtons</label>
+                            <div class="converter-input-wrap" id="wrap-N">
+                                <input
+                                    type="number"
+                                    id="conv-N"
+                                    placeholder="0.00"
+                                    step="any"
+                                    oninput="convertFrom('N')"
+                                    onfocus="setActiveWrap('N')"
+                                >
+                                <div class="converter-unit-badge">N</div>
+                            </div>
+                        </div>
+
+                        <div class="converter-divider">converts to</div>
+
+                        <!-- Pounds -->
+                        <div class="converter-field">
+                            <label>Pounds (force)</label>
+                            <div class="converter-input-wrap" id="wrap-lb">
+                                <input
+                                    type="number"
+                                    id="conv-lb"
+                                    placeholder="0.00"
+                                    step="any"
+                                    oninput="convertFrom('lb')"
+                                    onfocus="setActiveWrap('lb')"
+                                >
+                                <div class="converter-unit-badge">lb</div>
+                            </div>
+                        </div>
+
+                        <div class="converter-divider">converts to</div>
+
+                        <!-- Kilograms-force -->
+                        <div class="converter-field">
+                            <label>Kilograms (force)</label>
+                            <div class="converter-input-wrap" id="wrap-kg">
+                                <input
+                                    type="number"
+                                    id="conv-kg"
+                                    placeholder="0.00"
+                                    step="any"
+                                    oninput="convertFrom('kg')"
+                                    onfocus="setActiveWrap('kg')"
+                                >
+                                <div class="converter-unit-badge">kgf</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button class="converter-clear-btn" onclick="clearConverter()">Clear All</button>
+                </div>
+
+                <div class="converter-note">
+                    <strong>Note:</strong> Conversions use standard force equivalencies — 1 lb = 4.44822 N and 1 kgf = 9.80665 N. "kgf" (kilogram-force) is the gravitational force on a 1 kg mass, commonly used in clinical dynamometry.
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end .container -->
+
+    <script>
+        // ── Normative values data ──────────────────────────────────────────
+        const normativeData = [
+            { movement: "HIP", landmark: "", position: "", nmkg: "", bw: "", isHeader: true },
+            { movement: "Hip ADD", landmark: "ASIS - cuff", position: "0-20 ABD", nmkg: "1.5-2.0 Nm/kg", bw: "50-66% BW" },
+            { movement: "Hip ABD", landmark: "ASIS - cuff", position: "0-20 ADD", nmkg: "1.5-2.0 Nm/kg", bw: "50-66% BW" },
+            { movement: "Hip Flexion", landmark: "Greater Trochanter - cuff", position: "45 HF", nmkg: "2.0-3.0 Nm/kg", bw: "66-100% BW" },
+            { movement: "Hip Extension", landmark: "Greater Trochanter - cuff", position: "45-90 HF", nmkg: "3 Nm/kg", bw: "100% BW" },
+            { movement: "Hip ER", landmark: "Patella - cuff", position: "Prone + KF 90", nmkg: "<1.0 Nm/kg", bw: "<33% BW" },
+            { movement: "Hip IR", landmark: "Patella - cuff", position: "Prone + KF 90", nmkg: "<1.0 Nm/kg", bw: "<33% BW" },
+            { movement: "KNEE", landmark: "", position: "", nmkg: "", bw: "", isHeader: true },
+            { movement: "Knee Extension", landmark: "Lateral Femoral Condyle - Cuff", position: "60 KF", nmkg: "3 Nm/kg", bw: "100% BW" },
+            { movement: "Knee Flexion", landmark: "Lateral Femoral Condyle - Cuff", position: "90 HF/45 KF", nmkg: "1.5-2.0 Nm/kg", bw: "50-66% BW" },
+            { movement: "ANKLE", landmark: "", position: "", nmkg: "", bw: "", isHeader: true },
+            { movement: "Ankle PF", landmark: "Medial Malleoli - 1st MTP", position: "20 DF", nmkg: "15-27 N/kg", bw: "100-275% BW" },
+            { movement: "Ankle DF", landmark: "Medial Malleoli - 1st MTP", position: "30 PF", nmkg: "1 Nm/kg", bw: "33% BW" },
+            { movement: "Ankle Eversion", landmark: "Center of Ankle - Center of MTP", position: "Neutral and slight PF", nmkg: "0.5 Nm/kg", bw: "<17% BW" },
+            { movement: "Ankle Inversion", landmark: "Center of Ankle - Center of MTP", position: "Neutral and slight PF", nmkg: "0.5 Nm/kg", bw: "<17% BW" },
+            { movement: "FOOT", landmark: "", position: "", nmkg: "", bw: "", isHeader: true },
+            { movement: "Extrinsic", landmark: "1st MTP - Center of Foot", position: "Neutral + 45 MTP Ext", nmkg: "1.5 N/kg", bw: "" },
+            { movement: "Intrinsic", landmark: "1st MTP - Center of Foot", position: "45 PF + 45 MTP Ext", nmkg: "1.5 N/kg", bw: "<15% BW" },
+            { movement: "SHOULDER", landmark: "", position: "", nmkg: "", bw: "", isHeader: true },
+            { movement: "Shoulder ER", landmark: "Olecranon - cuff", position: "Neutral or slight opposite", nmkg: "0.4-0.5 Nm/kg", bw: "13-17% BW" },
+            { movement: "Shoulder IR", landmark: "Olecranon - cuff", position: "Neutral or slight opposite", nmkg: "0.6-0.8 Nm/kg", bw: "20-27% BW" },
+            { movement: "Shoulder Elevation", landmark: "Center of GH Joint - cuff", position: "90 Elevation", nmkg: "0.7-0.9 Nm/kg", bw: "25-30% BW" },
+            { movement: "ASH I", landmark: "Center of GH Joint - dynamometer", position: "Prone", nmkg: "<1.6 N/kg", bw: "<16% BW" },
+            { movement: "ASH Y", landmark: "Center of GH Joint - dynamometer", position: "Prone", nmkg: "<1.4 N/kg", bw: "<14% BW" },
+            { movement: "ASH T", landmark: "Center of GH Joint - dynamometer", position: "Prone", nmkg: "1.3 N/kg", bw: "<13% BW" },
+            { movement: "ELBOW", landmark: "", position: "", nmkg: "", bw: "", isHeader: true },
+            { movement: "Elbow Flexion", landmark: "Lateral Epicondyle - cuff", position: "90-105", nmkg: "0.7 Nm/kg", bw: "15-22% BW" },
+            { movement: "Elbow Extension", landmark: "Lateral Epicondyle - cuff", position: "50-85", nmkg: "0.4-0.6 Nm/kg", bw: "13-15% BW" },
+            { movement: "WRIST", landmark: "", position: "", nmkg: "", bw: "", isHeader: true },
+            { movement: "Wrist Flexion", landmark: "DRUJ - center of handle", position: "Slight wrist extension", nmkg: "0.11-0.29 Nm/kg", bw: "4-10% BW" },
+            { movement: "Wrist Extension", landmark: "DRUJ - center of handle", position: "Slight wrist flexion", nmkg: "0.08-0.14 Nm/kg", bw: "3-5% BW" },
+            { movement: "CERVICAL", landmark: "", position: "", nmkg: "", bw: "", isHeader: true },
+            { movement: "Flexion", landmark: "C7 - Strap", position: "Near Full Extension", nmkg: "3 N/kg", bw: "18-30% BW" },
+            { movement: "Extension", landmark: "C7 - Strap", position: "Near Full Flexion", nmkg: "1.5 N/kg", bw: "25-30% BW" },
+            { movement: "Side Bend", landmark: "C7 - Strap", position: "Contralateral Side Bend", nmkg: "1.5 N/kg", bw: "20-25% BW" }
+        ];
+
+        // ── Populate normative table ───────────────────────────────────────
+        function populateNormativeTable() {
+            const tbody = document.getElementById('normativeTableBody');
+            tbody.innerHTML = '';
+            normativeData.forEach(row => {
+                const tr = document.createElement('tr');
+                if (row.isHeader) tr.className = 'section-header';
+                tr.innerHTML = `
+                    <td>${row.movement}</td>
+                    <td>${row.landmark}</td>
+                    <td>${row.position}</td>
+                    <td>${row.nmkg}</td>
+                    <td>${row.bw}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ── Tab switching ──────────────────────────────────────────────────
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabName + '-tab').classList.add('active');
+
+            // Match button by data order
+            const tabOrder = ['calculator', 'normative', 'converter'];
+            const idx = tabOrder.indexOf(tabName);
+            if (idx !== -1) {
+                document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+            }
+        }
+
+        // ── Init ───────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', function() {
+            populateNormativeTable();
+        });
+
+        // ── Normative lookup helpers ───────────────────────────────────────
+        function getNormativeValues(movement) {
+            return normativeData.find(item => item.movement === movement && !item.isHeader);
+        }
+
+        function parseNormativeRange(rangeStr) {
+            if (!rangeStr || rangeStr === 'N/A') return null;
+            rangeStr = rangeStr.replace(/Nm\/kg|N\/kg/gi, '').trim();
+            if (rangeStr.includes('-')) {
+                const parts = rangeStr.split('-');
+                const min = parseFloat(parts[0]);
+                const max = parseFloat(parts[1]);
+                const mean = (min + max) / 2;
+                const sd = (max - min) / 4;
+                return { min, max, mean, sd };
+            }
+            const numMatch = rangeStr.match(/[\d.]+/);
+            if (numMatch) {
+                const value = parseFloat(numMatch[0]);
+                return { min: value * 0.7, max: value * 1.3, mean: value, sd: value * 0.15 };
+            }
+            return null;
+        }
+
+        function getPerformanceLevel(actual, normative) {
+            if (!normative) return { color: 'gray', text: 'No Reference Available', class: '' };
+            const { mean, sd } = normative;
+            if (actual >= mean) return { color: 'green', text: 'At or Above Expected', class: 'green' };
+            if (actual >= mean - sd) return { color: 'yellow', text: 'Slightly Below Expected (-1 SD)', class: 'yellow' };
+            if (actual >= mean - 2 * sd) return { color: 'yellow', text: 'Below Expected (-1 to -2 SD)', class: 'yellow' };
+            return { color: 'red', text: 'Significantly Below Expected (>2 SD)', class: 'red' };
+        }
+
+        function displayNormativeReference(movement, leftRatio, rightRatio) {
+            const normRef = getNormativeValues(movement);
+            const normBox = document.getElementById('normativeReference');
+            if (normRef) {
+                const normative = parseNormativeRange(normRef.nmkg);
+                document.getElementById('leftActualRatio').textContent = leftRatio.toFixed(3) + ' Nm/kg';
+                document.getElementById('leftExpectedRange').textContent = normRef.nmkg || 'N/A';
+                if (normative) {
+                    const leftPerf = getPerformanceLevel(leftRatio, normative);
+                    const leftBar = document.getElementById('leftIndicatorBar');
+                    leftBar.className = 'indicator-bar ' + leftPerf.class;
+                    leftBar.textContent = leftPerf.text;
+                    document.getElementById('leftIndicatorText').textContent =
+                        `Your value: ${leftRatio.toFixed(3)} Nm/kg | Expected mean: ${normative.mean.toFixed(2)} Nm/kg`;
+                }
+                document.getElementById('rightActualRatio').textContent = rightRatio.toFixed(3) + ' Nm/kg';
+                document.getElementById('rightExpectedRange').textContent = normRef.nmkg || 'N/A';
+                if (normative) {
+                    const rightPerf = getPerformanceLevel(rightRatio, normative);
+                    const rightBar = document.getElementById('rightIndicatorBar');
+                    rightBar.className = 'indicator-bar ' + rightPerf.class;
+                    rightBar.textContent = rightPerf.text;
+                    document.getElementById('rightIndicatorText').textContent =
+                        `Your value: ${rightRatio.toFixed(3)} Nm/kg | Expected mean: ${normative.mean.toFixed(2)} Nm/kg`;
+                }
+                normBox.style.display = 'block';
+            } else {
+                normBox.style.display = 'none';
+            }
+        }
+
+        // ── Conversion constants ───────────────────────────────────────────
+        const CONVERSIONS = {
+            force: {
+                N:  1,
+                lb: 4.44822,   // 1 lb-force = 4.44822 N
+                kg: 9.80665    // 1 kgf      = 9.80665 N
+            },
+            moment: { m: 1, cm: 0.01, ft: 0.3048, in: 0.0254 },
+            bodyweight: { kg: 1, lb: 0.453592 }
+        };
+
+        function convertToNewtons(value, unit) { return value * CONVERSIONS.force[unit]; }
+        function convertToMeters(value, unit)  { return value * CONVERSIONS.moment[unit]; }
+        function convertToKg(value, unit)       { return value * CONVERSIONS.bodyweight[unit]; }
+
+        function calculateLSI(left, right) {
+            return (Math.min(left, right) / Math.max(left, right)) * 100;
+        }
+
+        function getLSIInterpretation(leftTorque, rightTorque) {
+            if (leftTorque > rightTorque) return "Left side is stronger";
+            if (rightTorque > leftTorque) return "Right side is stronger";
+            return "Both sides are equal";
+        }
+
+        function calculate() {
+            const leftForce  = parseFloat(document.getElementById('leftForce').value);
+            const rightForce = parseFloat(document.getElementById('rightForce').value);
+            const forceUnit  = document.getElementById('forceUnit').value;
+            const momentArm  = parseFloat(document.getElementById('momentArm').value);
+            const momentUnit = document.getElementById('momentUnit').value;
+            const bodyweight = parseFloat(document.getElementById('bodyweight').value);
+            const bwUnit     = document.getElementById('bwUnit').value;
+            const selectedMovement = document.getElementById('jointSelect').value;
+
+            if (isNaN(leftForce) || isNaN(rightForce) || isNaN(momentArm) || isNaN(bodyweight)) {
+                alert('Please fill in all fields with valid numbers.');
+                return;
+            }
+            if (leftForce <= 0 || rightForce <= 0 || momentArm <= 0 || bodyweight <= 0) {
+                alert('All values must be greater than zero.');
+                return;
+            }
+
+            const leftForceN    = convertToNewtons(leftForce, forceUnit);
+            const rightForceN   = convertToNewtons(rightForce, forceUnit);
+            const momentArmM    = convertToMeters(momentArm, momentUnit);
+            const bodyweightKg  = convertToKg(bodyweight, bwUnit);
+
+            const leftTorqueNm  = leftForceN * momentArmM;
+            const rightTorqueNm = rightForceN * momentArmM;
+
+            const leftForceLb   = leftForceN  / CONVERSIONS.force.lb;
+            const leftForceKg   = leftForceN  / CONVERSIONS.force.kg;
+            const rightForceLb  = rightForceN / CONVERSIONS.force.lb;
+            const rightForceKg  = rightForceN / CONVERSIONS.force.kg;
+
+            const leftRatioNmKg  = leftTorqueNm  / bodyweightKg;
+            const rightRatioNmKg = rightTorqueNm / bodyweightKg;
+
+            const lsi = calculateLSI(leftTorqueNm, rightTorqueNm);
+
+            document.getElementById('lsiValue').textContent = lsi.toFixed(1) + '%';
+            document.getElementById('lsiInterpretation').textContent = getLSIInterpretation(leftTorqueNm, rightTorqueNm);
+
+            document.getElementById('leftForceDisplay').textContent = leftForce.toFixed(1) + ' ' + forceUnit;
+            let leftConversionsHTML = '';
+            if (forceUnit !== 'N')  leftConversionsHTML += `<span class="conversion-item">${leftForceN.toFixed(1)} N</span>`;
+            if (forceUnit !== 'lb') leftConversionsHTML += `<span class="conversion-item">${leftForceLb.toFixed(1)} lb</span>`;
+            if (forceUnit !== 'kg') leftConversionsHTML += `<span class="conversion-item">${leftForceKg.toFixed(1)} kg</span>`;
+            document.getElementById('leftForceConversions').innerHTML = leftConversionsHTML;
+            document.getElementById('leftRatioNm').textContent = leftRatioNmKg.toFixed(3) + ' Nm/kg';
+
+            document.getElementById('rightForceDisplay').textContent = rightForce.toFixed(1) + ' ' + forceUnit;
+            let rightConversionsHTML = '';
+            if (forceUnit !== 'N')  rightConversionsHTML += `<span class="conversion-item">${rightForceN.toFixed(1)} N</span>`;
+            if (forceUnit !== 'lb') rightConversionsHTML += `<span class="conversion-item">${rightForceLb.toFixed(1)} lb</span>`;
+            if (forceUnit !== 'kg') rightConversionsHTML += `<span class="conversion-item">${rightForceKg.toFixed(1)} kg</span>`;
+            document.getElementById('rightForceConversions').innerHTML = rightConversionsHTML;
+            document.getElementById('rightRatioNm').textContent = rightRatioNmKg.toFixed(3) + ' Nm/kg';
+
+            if (selectedMovement) displayNormativeReference(selectedMovement, leftRatioNmKg, rightRatioNmKg);
+
+            document.getElementById('results').classList.add('show');
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') calculate();
+            });
+        });
+
+        // ── Unit Converter logic ───────────────────────────────────────────
+        // 1 N = 1 N  |  1 lb = 4.44822 N  |  1 kgf = 9.80665 N
+        const FC = { N: 1, lb: 4.44822, kg: 9.80665 };
+
+        let activeWrap = null;
+
+        function setActiveWrap(unit) {
+            // Highlight the field being edited
+            ['N', 'lb', 'kg'].forEach(u => {
+                document.getElementById('wrap-' + u).classList.remove('active-source');
+            });
+            document.getElementById('wrap-' + unit).classList.add('active-source');
+            activeWrap = unit;
+        }
+
+        function convertFrom(sourceUnit) {
+            const raw = document.getElementById('conv-' + sourceUnit).value;
+            if (raw === '' || raw === null) {
+                clearConverter(sourceUnit);
+                return;
+            }
+            const value = parseFloat(raw);
+            if (isNaN(value)) return;
+
+            // Convert source → Newtons → every other unit
+            const valueN = value * FC[sourceUnit];
+
+            ['N', 'lb', 'kg'].forEach(unit => {
+                if (unit === sourceUnit) return;
+                const converted = valueN / FC[unit];
+                // Format: up to 4 significant figures, strip trailing zeros
+                document.getElementById('conv-' + unit).value = +converted.toPrecision(6);
+            });
+        }
+
+        function clearConverter(keepUnit) {
+            ['N', 'lb', 'kg'].forEach(u => {
+                if (u !== keepUnit) {
+                    document.getElementById('conv-' + u).value = '';
+                }
+                document.getElementById('wrap-' + u).classList.remove('active-source');
+            });
+            activeWrap = null;
+        }
+    </script>
+</body>
+</html>
