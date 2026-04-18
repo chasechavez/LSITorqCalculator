@@ -1,0 +1,23 @@
+{
+  "name": "LSI & Torque Calculator",
+  "short_name": "LSI Calc",
+  "description": "LSI and Torque Calculator by Chase Chavez, PT, DPT, SCS",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#005F87",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
