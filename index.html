@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LSI & Torque Calculator - Chase Chavez</title>
-    
+
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#005F87">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="LSI Calculator">
     <meta name="description" content="LSI & Torque Calculator by Chase Chavez, PT, DPT, SCS">
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="icon.svg">
     <link rel="apple-touch-icon" href="icon.svg">
-    
+
     <!-- Web App Manifest -->
     <link rel="manifest" href="manifest.json">
     <style>
@@ -303,7 +303,7 @@
             .comparison-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .movement-details {
                 grid-template-columns: 1fr;
             }
@@ -910,7 +910,7 @@
             <!-- Normative Reference Box -->
             <div id="normativeReference" class="normative-reference" style="display: none;">
                 <h3>Performance Analysis: Actual vs. Normative Values</h3>
-                
+
                 <div class="comparison-grid">
                     <!-- Left Side Comparison -->
                     <div class="comparison-card">
@@ -955,7 +955,7 @@
             <div class="normative-content">
                 <h2 style="color: #005F87; margin-bottom: 20px; text-align: center;">Dynamometry Reference Values</h2>
                 <p style="text-align: center; color: #565A5C; margin-bottom: 30px;">Reference values for force production across different movements and joint positions</p>
-                
+
                 <div class="normative-table-container">
                     <table class="normative-table">
                         <thead>
@@ -1123,6 +1123,19 @@
         // ── Init ───────────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', function() {
             populateNormativeTable();
+
+            // Handle URL hashes for PWA shortcuts
+            const hash = window.location.hash.substring(1);
+            if (['calculator', 'normative', 'converter'].includes(hash)) {
+                showTab(hash);
+            }
+        });
+
+        window.addEventListener('hashchange', function() {
+            const hash = window.location.hash.substring(1);
+            if (['calculator', 'normative', 'converter'].includes(hash)) {
+                showTab(hash);
+            }
         });
 
         // ── Normative lookup helpers ───────────────────────────────────────
