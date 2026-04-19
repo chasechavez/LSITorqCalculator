@@ -1,0 +1,44 @@
+{
+  "name": "LSI & Torque Calculator",
+  "short_name": "LSI Calc",
+  "description": "LSI and Torque Calculator by Chase Chavez, PT, DPT, SCS",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#003d5c",
+  "theme_color": "#005F87",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Calculator",
+      "short_name": "Calc",
+      "url": "index.html#calculator",
+      "icons": [{ "src": "icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Reference Values",
+      "short_name": "Ref",
+      "url": "index.html#normative",
+      "icons": [{ "src": "icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Unit Converter",
+      "short_name": "Conv",
+      "url": "index.html#converter",
+      "icons": [{ "src": "icon.svg", "sizes": "any" }]
+    }
+  ]
+}

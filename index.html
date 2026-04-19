@@ -4,22 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LSI & Torque Calculator - Chase Chavez</title>
-    
+
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#005F87">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="LSI Calculator">
     <meta name="description" content="LSI & Torque Calculator by Chase Chavez, PT, DPT, SCS">
-    
+
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'><path d='M 110 50 L 180 170 L 40 170 Z' stroke='%23005F87' stroke-width='14' fill='none' stroke-linejoin='miter'/><line x1='110' y1='50' x2='110' y2='170' stroke='%23005F87' stroke-width='10'/><line x1='40' y1='170' x2='145' y2='110' stroke='%23005F87' stroke-width='10'/><line x1='180' y1='170' x2='75' y2='110' stroke='%23005F87' stroke-width='10'/><circle cx='110' cy='125' r='14' fill='%23005F87'/></svg>">
-    
-    <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'><rect width='220' height='220' fill='white'/><path d='M 110 50 L 180 170 L 40 170 Z' stroke='%23005F87' stroke-width='14' fill='none' stroke-linejoin='miter'/><line x1='110' y1='50' x2='110' y2='170' stroke='%23005F87' stroke-width='10'/><line x1='40' y1='170' x2='145' y2='110' stroke='%23005F87' stroke-width='10'/><line x1='180' y1='170' x2='75' y2='110' stroke='%23005F87' stroke-width='10'/><circle cx='110' cy='125' r='14' fill='%23005F87'/></svg>">
-    
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="apple-touch-icon" href="icon.svg">
+
     <!-- Web App Manifest -->
-    <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;LSI Calculator&quot;,&quot;short_name&quot;:&quot;LSI Calc&quot;,&quot;description&quot;:&quot;LSI and Torque Calculator by Chase Chavez&quot;,&quot;theme_color&quot;:&quot;%23005F87&quot;,&quot;background_color&quot;:&quot;%23ffffff&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'><rect width='220' height='220' fill='white'/><path d='M 110 50 L 180 170 L 40 170 Z' stroke='%23005F87' stroke-width='14' fill='none' stroke-linejoin='miter'/><line x1='110' y1='50' x2='110' y2='170' stroke='%23005F87' stroke-width='10'/><line x1='40' y1='170' x2='145' y2='110' stroke='%23005F87' stroke-width='10'/><line x1='180' y1='170' x2='75' y2='110' stroke='%23005F87' stroke-width='10'/><circle cx='110' cy='125' r='14' fill='%23005F87'/></svg>&quot;,&quot;sizes&quot;:&quot;512x512&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
+    <link rel="manifest" href="manifest.json">
     <style>
         * {
             margin: 0;
@@ -305,7 +303,7 @@
             .comparison-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .movement-details {
                 grid-template-columns: 1fr;
             }
@@ -736,14 +734,7 @@
 <body>
     <div class="container">
         <div class="brand-header">
-            <svg width="80" height="80" viewBox="0 0 220 220" class="brand-logo">
-                <path d="M 110 50 L 180 170 L 40 170 Z" 
-                      stroke="#005F87" stroke-width="14" fill="none" stroke-linejoin="miter"/>
-                <line x1="110" y1="50" x2="110" y2="170" stroke="#005F87" stroke-width="10"/>
-                <line x1="40" y1="170" x2="145" y2="110" stroke="#005F87" stroke-width="10"/>
-                <line x1="180" y1="170" x2="75" y2="110" stroke="#005F87" stroke-width="10"/>
-                <circle cx="110" cy="125" r="14" fill="#005F87"/>
-            </svg>
+            <img src="icon.svg" width="80" height="80" alt="Logo" class="brand-logo">
             <div class="brand-name">CHASE CHAVEZ</div>
             <div class="brand-credentials">PT, DPT, SCS</div>
         </div>
@@ -919,7 +910,7 @@
             <!-- Normative Reference Box -->
             <div id="normativeReference" class="normative-reference" style="display: none;">
                 <h3>Performance Analysis: Actual vs. Normative Values</h3>
-                
+
                 <div class="comparison-grid">
                     <!-- Left Side Comparison -->
                     <div class="comparison-card">
@@ -964,7 +955,7 @@
             <div class="normative-content">
                 <h2 style="color: #005F87; margin-bottom: 20px; text-align: center;">Dynamometry Reference Values</h2>
                 <p style="text-align: center; color: #565A5C; margin-bottom: 30px;">Reference values for force production across different movements and joint positions</p>
-                
+
                 <div class="normative-table-container">
                     <table class="normative-table">
                         <thead>
@@ -1132,6 +1123,19 @@
         // ── Init ───────────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', function() {
             populateNormativeTable();
+
+            // Handle URL hashes for PWA shortcuts
+            const hash = window.location.hash.substring(1);
+            if (['calculator', 'normative', 'converter'].includes(hash)) {
+                showTab(hash);
+            }
+        });
+
+        window.addEventListener('hashchange', function() {
+            const hash = window.location.hash.substring(1);
+            if (['calculator', 'normative', 'converter'].includes(hash)) {
+                showTab(hash);
+            }
         });
 
         // ── Normative lookup helpers ───────────────────────────────────────
@@ -1334,6 +1338,15 @@
                 document.getElementById('wrap-' + u).classList.remove('active-source');
             });
             activeWrap = null;
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed', err));
+            });
         }
     </script>
 </body>
