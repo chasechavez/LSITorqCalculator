@@ -1,7 +1,10 @@
-const CACHE_NAME = 'lsi-calc-v2';
+const CACHE_NAME = 'lsi-calc-v3';
 const ASSETS = [
   'index.html',
   'icon.svg',
+  'icon-192.png',
+  'icon-512.png',
+  'apple-touch-icon.png',
   'manifest.json'
 ];
 
@@ -19,7 +22,7 @@ self.addEventListener('activate', event => {
       return Promise.all(
         keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
