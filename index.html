@@ -19,6 +19,15 @@
     <!-- Web App Manifest -->
     <link rel="manifest" href="manifest.json">
     <style>
+        :root {
+            --blue:  #005F87;
+            --teal:  #00A3A3;
+            --slate: #565A5C;
+            --off:   #F5F4F2;
+            --rule:  #E0DFDC;
+            --dark:  #141414;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -26,8 +35,10 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #003d5c 0%, #001f2e 100%);
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at 12% 12%, rgba(0, 163, 163, 0.10), transparent 42%),
+                var(--dark);
             min-height: 100vh;
             padding: 20px;
             display: flex;
@@ -36,40 +47,42 @@
         }
 
         .container {
-            background: #f8f9fa;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            background: var(--off);
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
             padding: 40px;
             max-width: 900px;
             width: 100%;
-            border: 1px solid rgba(0, 95, 135, 0.1);
+            border: 1px solid var(--rule);
         }
 
         .brand-header {
             text-align: center;
             margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #00A3A3;
+            padding-bottom: 22px;
+            border-bottom: 1px solid var(--rule);
         }
 
         .brand-logo {
             display: block;
-            margin: 0 auto 15px auto;
+            margin: 0 auto 16px auto;
         }
 
         .brand-name {
-            color: #005F87;
-            font-size: 1.8em;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
+            color: var(--blue);
+            font-size: 1.6em;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
 
         .brand-credentials {
-            color: #565A5C;
-            font-size: 0.9em;
-            font-weight: 500;
+            color: var(--teal);
+            font-size: 0.85em;
+            font-weight: 700;
+            letter-spacing: 3px;
         }
+
 
         .nav-tabs {
             display: flex;
@@ -88,7 +101,7 @@
             cursor: pointer;
             border-bottom: 3px solid transparent;
             transition: all 0.3s;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         .tab-btn:hover {
@@ -126,7 +139,7 @@
         }
 
         .normative-table thead {
-            background: linear-gradient(135deg, #005F87 0%, #003d5c 100%);
+            background: var(--blue);
             color: white;
         }
 
@@ -398,7 +411,7 @@
 
         .calculate-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 95, 135, 0.4);
+            box-shadow: 0 8px 18px rgba(0, 95, 135, 0.25);
             background: #004a6b;
         }
 
@@ -416,13 +429,12 @@
         }
 
         .result-card {
-            background: linear-gradient(135deg, #005F87 0%, #003d5c 100%);
+            background: var(--blue);
             color: white;
             padding: 30px;
-            border-radius: 15px;
+            border-radius: 10px;
             margin-bottom: 20px;
-            box-shadow: 0 15px 40px rgba(0, 95, 135, 0.3);
-            border: 2px solid rgba(0, 163, 163, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 95, 135, 0.2);
             position: relative;
             overflow: hidden;
         }
@@ -434,13 +446,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #00A3A3, #005F87, #00A3A3);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+            background: var(--teal);
         }
 
         .result-title {
@@ -475,11 +481,10 @@
         }
 
         .torque-card {
-            background: linear-gradient(135deg, #005F87 0%, #003d5c 100%);
+            background: var(--blue);
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 15px 40px rgba(0, 95, 135, 0.25);
-            border: 2px solid rgba(0, 163, 163, 0.25);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 95, 135, 0.15);
             position: relative;
             overflow: hidden;
         }
@@ -491,8 +496,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #00A3A3, #005F87, #00A3A3);
-            animation: shimmer 3s infinite;
+            background: var(--teal);
         }
 
         .torque-card h3 {
@@ -703,7 +707,7 @@
             font-size: 0.95em;
             font-weight: 600;
             cursor: pointer;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             transition: all 0.2s;
         }
 
@@ -734,8 +738,16 @@
 <body>
     <div class="container">
         <div class="brand-header">
-            <img src="icon.svg" width="80" height="80" alt="Logo" class="brand-logo">
-            <div class="brand-name">CHASE CHAVEZ</div>
+            <svg class="brand-logo" width="64" height="64" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-label="Chase Chavez node mark">
+                <line x1="100" y1="108" x2="100" y2="44"  stroke="#005F87" stroke-width="6.5" stroke-linecap="round"/>
+                <line x1="100" y1="108" x2="45"  y2="139" stroke="#005F87" stroke-width="6.5" stroke-linecap="round"/>
+                <line x1="100" y1="108" x2="155" y2="139" stroke="#005F87" stroke-width="6.5" stroke-linecap="round"/>
+                <circle cx="100" cy="44"  r="9" fill="#00A3A3"/>
+                <circle cx="45"  cy="139" r="9" fill="#00A3A3"/>
+                <circle cx="155" cy="139" r="9" fill="#00A3A3"/>
+                <circle cx="100" cy="108" r="13" fill="#005F87"/>
+            </svg>
+            <div class="brand-name">Chase Chavez</div>
             <div class="brand-credentials">PT, DPT, SCS</div>
         </div>
         <h1>LSI & Torque Calculator</h1>

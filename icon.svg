@@ -1,7 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220">
-    <path d="M 110 50 L 180 170 L 40 170 Z" stroke="#005F87" stroke-width="14" fill="none" stroke-linejoin="miter"/>
-    <line x1="110" y1="50" x2="110" y2="170" stroke="#005F87" stroke-width="10"/>
-    <line x1="40" y1="170" x2="145" y2="110" stroke="#005F87" stroke-width="10"/>
-    <line x1="180" y1="170" x2="75" y2="110" stroke="#005F87" stroke-width="10"/>
-    <circle cx="110" cy="125" r="14" fill="#005F87"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+    <rect width="200" height="200" fill="#005F87"/>
+    <line x1="100" y1="108" x2="100" y2="44"  stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round"/>
+    <line x1="100" y1="108" x2="45"  y2="139" stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round"/>
+    <line x1="100" y1="108" x2="155" y2="139" stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round"/>
+    <circle cx="100" cy="44"  r="9" fill="#00A3A3"/>
+    <circle cx="45"  cy="139" r="9" fill="#00A3A3"/>
+    <circle cx="155" cy="139" r="9" fill="#00A3A3"/>
+    <circle cx="100" cy="108" r="13" fill="#FFFFFF"/>
 </svg>
